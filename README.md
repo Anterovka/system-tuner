@@ -10,7 +10,7 @@
 
 ## Что это?
 
-**System Tuner** — графический интерфейс для настройки параметров Linux. Вместо десятков терминалов — одно окно с интуитивным интерфейсом.
+**System Tuner** — графический интерфейс для настройки параметров Linux. 
 
 <br>
 
@@ -42,22 +42,6 @@
 <br>
 
 ## Установка
-
-### AppImage (рекомендуется)
-
-```bash
-# Скачиваем последний релиз
-wget https://github.com/Anterovka/system-tuner/releases/latest/download/system-tuner.AppImage
-chmod +x system-tuner.AppImage
-sudo ./system-tuner.AppImage
-```
-
-### cargo install
-
-```bash
-cargo install --git https://github.com/Anterovka/system-tuner.git
-sudo system-tuner
-```
 
 ### Из исходников
 
@@ -95,43 +79,11 @@ sudo ./target/release/system-tuner
 
 <br>
 
-## Структура проекта
-
-```
-system-tuner/
-├── src/
-│   ├── main.rs              # Точка входа
-│   ├── app.rs               # Главное окно, навигация, тема
-│   ├── backend/
-│   │   ├── sysctl.rs        # Чтение/запись параметров ядра
-│   │   ├── systemd.rs       # Управление службами
-│   │   ├── storage.rs       # Swap, ZRAM, TRIM, диски
-│   │   └── performance.rs   # CPU governor, профили
-│   └── pages/
-│       ├── kernel.rs        # Страница настроек ядра
-│       ├── services.rs      # Страница служб
-│       ├── storage.rs       # Страница хранилища
-│       └── performance.rs   # Страница производительности
-└── Cargo.toml
-```
-
-<br>
-
 ## Технологии
 
 - **Rust** — безопасность и производительность
 - **egui** — быстрый immediate-mode GUI
 - **eframe** — кроссплатформенный фреймворк
-
-<br>
-
-## Contributing
-
-PR приветствуются! Если хочешь добавить:
-- Новые параметры sysctl
-- Поддержку других DE/WM
-- Экспорт/импорт профилей
-- Автозапуск с настройками
 
 <br>
 
