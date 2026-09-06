@@ -1,13 +1,8 @@
-use eframe::egui::{self, Color32, RichText, Rounding, Stroke, Vec2};
-
-const ACCENT: Color32 = Color32::from_rgb(99, 179, 237);
-const BG_CARD: Color32 = Color32::from_rgb(36, 44, 58);
-const TEXT_SECONDARY: Color32 = Color32::from_rgb(139, 148, 158);
-const GREEN: Color32 = Color32::from_rgb(63, 185, 80);
-const YELLOW: Color32 = Color32::from_rgb(210, 153, 34);
-const RED: Color32 = Color32::from_rgb(248, 81, 73);
+use eframe::egui::{self, Color32, RichText};
 
 use crate::backend::systemd::{self, Service};
+use crate::ui::components::*;
+use crate::ui::theme::*;
 
 pub struct ServicesPage {
     services: Vec<Service>,
@@ -38,50 +33,12 @@ impl ServicesPage {
     }
 
     pub fn show(&mut self, ui: &mut egui::Ui) {
-        ui.horizontal(|ui| {
-            ui.label(RichText::new("⚡").size(24.0).color(ACCENT));
-            ui.label(
-                RichText::new("Управление службами")
-                    .size(22.0)
-                    .strong()
-                    .color(Color32::WHITE),
-            );
-        });
-        ui.label(
-            RichText::new("Включение и отключение системных сервисов")
-                .color(TEXT_SECONDARY),
-        );
-
-        ui.add_space(12.0);
+        page_header(ui, "⚡", "Управление службами", "Включение и отключение системных сервисов");
 
         ui.horizontal(|ui| {
-            let search_bg = BG_CARD;
-            let frame = egui::Frame::none()
-                .fill(search_bg)
-                .rounding(Rounding::same(8.0))
-                .inner_margin(egui::Margin::symmetric(12.0, 8.0));
-            frame.show(ui, |ui| {
-                ui.label(RichText::new("🔍").color(TEXT_SECONDARY));
-                ui.add(
-                    egui::TextEdit::singleline(&mut self.filter)
-                        .hint_text("Поиск служб...")
-                        .desired_width(200.0)
-                        .margin(Vec2::new(4.0, 2.0)),
-                );
-            });
-
-            let btn_frame = egui::Frame::none()
-                .fill(ACCENT)
-                .rounding(Rounding::same(8.0))
-                .inner_margin(egui::Margin::symmetric(16.0, 8.0));
-            let btn = btn_frame.show(ui, |ui| {
-                ui.label(
-                    RichText::new("↻ Обновить")
-                        .color(Color32::WHITE)
-                        .strong(),
-                );
-            });
-            if btn.response.interact(egui::Sense::click()).clicked() {
+            search_field(ui, &mut self.filter, "Поиск служб...");
+            ui.add_space(4.0);
+            if primary_button(ui, "↻ Обновить") {
                 self.refresh();
             }
         });
@@ -106,7 +63,7 @@ impl ServicesPage {
                 } else if service.enabled {
                     YELLOW
                 } else {
-                    TEXT_SECONDARY
+                    TEXT_DIM
                 };
 
                 let status_text = if service.active {
@@ -117,13 +74,7 @@ impl ServicesPage {
                     "● inactive"
                 };
 
-                let card = egui::Frame::none()
-                    .fill(BG_CARD)
-                    .rounding(Rounding::same(10.0))
-                    .inner_margin(egui::Margin::same(14.0))
-                    .stroke(Stroke::new(1.0_f32, Color32::from_rgb(48, 56, 70)));
-
-                card.show(ui, |ui| {
+                card(ui, |ui| {
                     ui.horizontal(|ui| {
                         ui.vertical(|ui| {
                             ui.label(
@@ -147,59 +98,18 @@ impl ServicesPage {
                                     .color(status_color),
                             );
 
-                            let stop_frame = egui::Frame::none()
-                                .fill(Color32::from_rgb(60, 25, 25))
-                                .rounding(Rounding::same(6.0))
-                                .inner_margin(egui::Margin::symmetric(10.0, 4.0));
-                            let start_frame = egui::Frame::none()
-                                .fill(Color32::from_rgb(25, 50, 35))
-                                .rounding(Rounding::same(6.0))
-                                .inner_margin(egui::Margin::symmetric(10.0, 4.0));
-                            let toggle_frame = egui::Frame::none()
-                                .fill(Color32::from_rgb(45, 55, 72))
-                                .rounding(Rounding::same(6.0))
-                                .inner_margin(egui::Margin::symmetric(10.0, 4.0));
-
                             if service.active {
-                                let btn = stop_frame.show(ui, |ui| {
-                                    ui.label(
-                                        RichText::new("⏹ Стоп")
-                                            .size(11.0)
-                                            .color(RED)
-                                            .strong(),
-                                    );
-                                });
-                                if btn.response.interact(egui::Sense::click()).clicked() {
+                                if danger_button(ui, "⏹ Стоп") {
                                     action = Some(Action::Stop(service.name.clone()));
                                 }
                             } else if service.enabled {
-                                let btn = start_frame.show(ui, |ui| {
-                                    ui.label(
-                                        RichText::new("▶ Старт")
-                                            .size(11.0)
-                                            .color(GREEN)
-                                            .strong(),
-                                    );
-                                });
-                                if btn.response.interact(egui::Sense::click()).clicked() {
+                                if success_button(ui, "▶ Старт") {
                                     action = Some(Action::Start(service.name.clone()));
                                 }
                             }
 
-                            let toggle_text = if service.enabled {
-                                "Выкл"
-                            } else {
-                                "Вкл"
-                            };
-                            let btn = toggle_frame.show(ui, |ui| {
-                                ui.label(
-                                    RichText::new(toggle_text)
-                                        .size(11.0)
-                                        .color(ACCENT)
-                                        .strong(),
-                                );
-                            });
-                            if btn.response.interact(egui::Sense::click()).clicked() {
+                            let toggle_label = if service.enabled { "Выкл" } else { "Вкл" };
+                            if subtle_button(ui, toggle_label) {
                                 action = Some(Action::ToggleEnable(
                                     service.name.clone(),
                                     service.enabled,
@@ -262,25 +172,7 @@ impl ServicesPage {
 
         if !self.status_msg.is_empty() {
             ui.add_space(8.0);
-            let status_frame = egui::Frame::none()
-                .fill(if self.status_is_error {
-                    Color32::from_rgb(60, 20, 20)
-                } else {
-                    Color32::from_rgb(20, 50, 30)
-                })
-                .rounding(Rounding::same(8.0))
-                .inner_margin(egui::Margin::same(12.0))
-                .stroke(Stroke::new(
-                    1.0_f32,
-                    if self.status_is_error { RED } else { GREEN },
-                ));
-            status_frame.show(ui, |ui| {
-                ui.label(
-                    RichText::new(&self.status_msg)
-                        .color(if self.status_is_error { RED } else { GREEN })
-                        .size(12.0),
-                );
-            });
+            status_bar(ui, &self.status_msg, self.status_is_error);
         }
     }
 }
