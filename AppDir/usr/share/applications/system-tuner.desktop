@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=System Tuner
+Comment=Настройка Linux из одного окна
+Exec=system-tuner
+Icon=system-tuner
+Categories=System;Settings;
+Terminal=false

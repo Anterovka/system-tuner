@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e293b"/>
+      <stop offset="100%" style="stop-color:#0f172a"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="48" fill="url(#bg)"/>
+  <g transform="translate(128,128)">
+    <circle r="70" fill="none" stroke="#63b3ed" stroke-width="8" opacity="0.3"/>
+    <circle r="50" fill="none" stroke="#63b3ed" stroke-width="6"/>
+    <circle r="8" fill="#63b3ed"/>
+    <line x1="0" y1="-50" x2="0" y2="-30" stroke="#63b3ed" stroke-width="6" stroke-linecap="round"/>
+    <line x1="50" y1="0" x2="30" y2="0" stroke="#63b3ed" stroke-width="6" stroke-linecap="round"/>
+    <line x1="0" y1="50" x2="0" y2="30" stroke="#63b3ed" stroke-width="6" stroke-linecap="round"/>
+    <line x1="-50" y1="0" x2="-30" y2="0" stroke="#63b3ed" stroke-width="6" stroke-linecap="round"/>
+    <line x1="35" y1="-35" x2="21" y2="-21" stroke="#63b3ed" stroke-width="5" stroke-linecap="round"/>
+    <line x1="35" y1="35" x2="21" y2="21" stroke="#63b3ed" stroke-width="5" stroke-linecap="round"/>
+    <line x1="-35" y1="35" x2="-21" y2="21" stroke="#63b3ed" stroke-width="5" stroke-linecap="round"/>
+    <line x1="-35" y1="-35" x2="-21" y2="-21" stroke="#63b3ed" stroke-width="5" stroke-linecap="round"/>
+  </g>
+</svg>

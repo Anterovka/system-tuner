@@ -1,0 +1,12 @@
+pkgbase = system-tuner
+	pkgdesc = GUI tool for Linux system tuning (sysctl, systemd, storage, performance)
+	pkgver = 0.1.0
+	pkgrel = 1
+	url = https://github.com/yourname/system-tuner
+	arch = x86_64
+	license = MIT
+	makedepends = cargo
+	source = system-tuner-0.1.0.tar.gz
+	sha256sums = SKIP
+
+	pkgname = system-tuner
